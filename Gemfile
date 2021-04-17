@@ -21,3 +21,7 @@ group :development do
   gem 'listen', '~> 3.3'
   gem 'web-console'
 end
+
+group :test do
+  gem 'capybara'
+end
