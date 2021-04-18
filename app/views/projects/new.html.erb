@@ -1,5 +1,11 @@
 <h2>New Project</h2>
 
+<% if @errors.present? %>
+  <% @errors.map do |error| %>
+    <li><%= error.path.first.to_s.capitalize %> <%= error.text %></li>
+  <% end %>
+<% end %>
+
 <%= form_with model: @project, scope: :project do |form| %>
   <%= form.label :name %>
   <%= form.text_field :name %>

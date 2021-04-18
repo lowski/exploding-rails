@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
-  namespace :projects do
-    resources :projects
-  end
+  resources :projects
 
-  root to: 'projects/projects#index'
+  root to: 'projects#index'
 end
