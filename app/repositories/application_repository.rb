@@ -3,6 +3,7 @@ class ApplicationRepository < ROM::Repository::Root
 
   struct_namespace ::Entities
 
+  # TODO: Replace it by `build` command
   def build(attributes = {})
     root.mapper.model.new(attributes)
   end
