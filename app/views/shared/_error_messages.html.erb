@@ -1,0 +1,7 @@
+<p>There were errors that prevented this form from being saved:</p>
+
+<% if errors.present? %>
+  <% errors.map do |error| %>
+    <li><%= error.path.first.to_s.capitalize %> <%= error.text %></li>
+  <% end %>
+<% end %>

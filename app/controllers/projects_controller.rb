@@ -1,40 +1,33 @@
 class ProjectsController < ApplicationController
   def index
-    @projects = repo.all
+    render :index, locals: { projects: context.all }
   end
 
   def show
-    @project = repo.by_id(params[:id])
+    render :show, locals: { project: context.find(params[:id]) }
   end
 
   def new
-    @project = repo.build
+    render :new, locals: { project: context.build }
   end
 
   def create
-    case project_contract.(project_params)
-    in Dry::Validation::Result => result if result.success?
-      repo.create(project_params)
+    case context.create(project_params)
+    in Success(Entities::Project => project)
       redirect_to projects_path, notice: 'Project has been created'
-    in Dry::Validation::Result => result
-      @errors = result.errors
-      @project = repo.build
+    in Failure(errors: Dry::Validation::MessageSet => errors, project: Entities::Project => project)
       flash.now[:alert] = 'Project could not be created'
-      render :new
+      render :new, locals: { errors: errors, project: project }
     end
   end
 
   private
 
-  def project_contract
-    @project_contract ||= ProjectContract.new
+  def context
+    @context ||= ProjectContext.new(ProjectRepository.new(rom), ProjectContract.new)
   end
 
   def project_params
     params.require(:project).permit(:name).to_h.symbolize_keys
-  end
-
-  def repo
-    @repo ||= ProjectRepository.new(rom)
   end
 end

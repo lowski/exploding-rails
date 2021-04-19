@@ -1,12 +1,8 @@
 <h2>New Project</h2>
 
-<% if @errors.present? %>
-  <% @errors.map do |error| %>
-    <li><%= error.path.first.to_s.capitalize %> <%= error.text %></li>
-  <% end %>
-<% end %>
+<%= render 'shared/error_messages', errors: errors %>
 
-<%= form_with model: @project, scope: :project do |form| %>
+<%= form_with model: project, scope: :project do |form| %>
   <%= form.label :name %>
   <%= form.text_field :name %>
   <%= form.submit 'Create Project', class: 'btn btn-primary' %>

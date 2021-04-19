@@ -8,6 +8,7 @@ gem 'rails', '~> 6.1.3', '>= 6.1.3.1'
 gem 'pg'
 gem 'puma', '~> 5.0'
 
+gem 'dry-monads'
 gem 'dry-validation'
 gem 'rom-rails'
 gem 'rom-sql'
