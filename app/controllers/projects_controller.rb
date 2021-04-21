@@ -1,18 +1,18 @@
 class ProjectsController < ApplicationController
   def index
-    render :index, locals: { projects: context.all }
+    render :index, locals: { projects: projects.all }
   end
 
   def show
-    render :show, locals: { project: context.find(params[:id]) }
+    render :show, locals: { project: projects.find(params[:id]) }
   end
 
   def new
-    render :new, locals: { project: context.build }
+    render :new, locals: { project: projects.build }
   end
 
   def create
-    case context.create(project_params)
+    case projects.create(project_params)
     in Success(Entities::Project => project)
       redirect_to projects_path, notice: 'Project has been created'
     in Failure(errors: Dry::Validation::MessageSet => errors, project: Entities::Project => project)
@@ -23,8 +23,8 @@ class ProjectsController < ApplicationController
 
   private
 
-  def context
-    @context ||= ProjectContext.new(ProjectRepository.new(rom), ProjectContract.new)
+  def projects
+    @projects ||= ProjectsContext.new
   end
 
   def project_params

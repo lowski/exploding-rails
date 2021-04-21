@@ -1,21 +1,15 @@
 require 'dry/monads'
 require 'dry/monads/do'
 
-class ProjectContext
+class ProjectsContext
   include Dry::Monads[:result]
   include Dry::Monads::Do.for(:create)
 
-  def initialize(repo, contract)
+  delegate :all, :build, :find, to: :@repo
+
+  def initialize(repo = ProjectRepository.new(ROM.env), contract = ProjectContract.new)
     @repo = repo
     @contract = contract
-  end
-
-  def all
-    @repo.all
-  end
-
-  def build(attributes = {})
-    @repo.build(attributes)
   end
 
   def create(input)
@@ -25,14 +19,28 @@ class ProjectContext
     Success(project)
   end
 
-  def find(id)
-    @repo.by_id(id)
+  def update(project, input)
+    values = yield validate(input)
+    project = yield persist(project, values)
+
+    Success(project)
+  end
+
+  def destroy(project)
+    project = @repo.delete(project.id)
+
+    case project
+    when Entities::Project
+      Success(project)
+    else
+      Failure()
+    end
   end
 
   private
 
   def validate(input)
-    result = @contract.(input)
+    result = @contract.call(input)
     if result.success?
       Success(result.values.to_h)
     else

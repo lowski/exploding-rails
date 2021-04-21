@@ -3,6 +3,10 @@ class ApplicationRepository < ROM::Repository::Root
 
   struct_namespace ::Entities
 
+  def all
+    root.to_a
+  end
+
   def build(attributes = {})
     root.mapper.model.new(attributes)
   end
@@ -11,7 +15,5 @@ class ApplicationRepository < ROM::Repository::Root
     root.by_pk(id).one!
   end
 
-  def all
-    root.to_a
-  end
+  alias find by_id
 end

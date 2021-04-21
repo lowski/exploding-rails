@@ -28,4 +28,5 @@ end
 
 group :test do
   gem 'capybara'
+  gem 'rom-factory'
 end
